@@ -1,0 +1,14 @@
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Secrets / credentials
+service-account.json
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
