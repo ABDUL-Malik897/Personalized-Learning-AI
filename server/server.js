@@ -31,12 +31,9 @@ app.use("/api/progress", progressRoutes);
 app.use("/api/feedback", feedbackRoutes);
 app.use("/api/ai", aiRoutes);
 app.use("/api/auth", authRoutes);
-app.use(
-    "/api/resources",
-    resourceRoutes
-);
+app.use("/api/resources", resourceRoutes);
 
-app.get("/api/health", (req, res) => {
+app.get("/", (req, res) => {
   res.json({
     success: true,
     message: "Personalized Learning AI API is running",
