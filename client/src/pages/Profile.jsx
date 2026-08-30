@@ -11,6 +11,7 @@ function Profile() {
     const [editing, setEditing] = useState(false);
     const [skillInput, setSkillInput] = useState("");
     const [interestInput, setInterestInput] = useState("");
+    const [courseInput, setCourseInput] = useState("");
     const [form, setForm] = useState({
         goal: "",
         experienceLevel: "",
@@ -102,6 +103,7 @@ function Profile() {
         setSkillInput("");
         setInterestInput("");
         setEditing(true);
+        setCourseInput("");
     };
 
     const handleCancelEdit = () => {
@@ -149,6 +151,7 @@ function Profile() {
             localStorage.setItem("learnerProfile", JSON.stringify(result.user));
             setSkillInput("");
             setInterestInput("");
+            toast.success("Profile updated successfully.");
             setEditing(false);
         } catch (error) {
             console.error("Failed to update profile:", error);
@@ -156,6 +159,39 @@ function Profile() {
         } finally {
             setSaving(false);
         }
+    };
+
+    const addCompletedCourse = () => {
+        const course = courseInput.trim();
+
+        if (!course) return;
+
+        const alreadyExists = form.completedCourses.some(
+            (item) =>
+                item.toLowerCase() === course.toLowerCase()
+        );
+
+        if (!alreadyExists) {
+            setForm((prev) => ({
+                ...prev,
+                completedCourses: [
+                    ...prev.completedCourses,
+                    course,
+                ],
+            }));
+        }
+
+        setCourseInput("");
+    };
+
+    const removeCompletedCourse = (courseToRemove) => {
+        setForm((prev) => ({
+            ...prev,
+            completedCourses:
+                prev.completedCourses.filter(
+                    (course) => course !== courseToRemove
+                ),
+        }));
     };
 
     if (loading) {
@@ -403,26 +439,71 @@ function Profile() {
                             </div>
                         </div>
                         <section className="mt-8">
-                            <h2 className="text-xl font-semibold">
+                            <div className="mb-3 flex items-center gap-2 text-sm font-medium text-slate-400">
+                                <BookOpen size={16} />
                                 Completed Learning
-                            </h2>
-                            <p className="mt-1 text-sm text-slate-500">
-                                Courses, tutorials, certifications, and topics you've already studied.
+                            </div>
+
+                            <p className="mb-4 text-sm text-slate-500">
+                                Courses, tutorials, certifications, and topics
+                                you've already studied.
                             </p>
+
+                            {editing && (
+                                <div className="flex flex-col gap-3 sm:flex-row">
+                                    <input
+                                        type="text"
+                                        value={courseInput}
+                                        onChange={(e) =>
+                                            setCourseInput(e.target.value)
+                                        }
+                                        onKeyDown={(e) => {
+                                            if (e.key === "Enter") {
+                                                e.preventDefault();
+                                                addCompletedCourse();
+                                            }
+                                        }}
+                                        placeholder="e.g. JavaScript Fundamentals"
+                                        className="flex-1 rounded-xl border border-slate-800 bg-slate-950 px-4 py-3 text-sm outline-none transition focus:border-slate-600"
+                                    />
+
+                                    <button
+                                        type="button"
+                                        onClick={addCompletedCourse}
+                                        className="rounded-xl bg-white px-5 py-3 text-sm font-medium text-slate-950 transition hover:bg-slate-200"
+                                    >
+                                        Add Course
+                                    </button>
+                                </div>
+                            )}
+
                             <div className="mt-4 flex flex-wrap gap-2">
-                                {user.completedCourses?.length > 0 ? (
-                                    user.completedCourses.map((course) => (
+                                {form.completedCourses.length > 0 ? (
+                                    form.completedCourses.map((course) => (
                                         <span
                                             key={course}
-                                            className="rounded-full border border-slate-700 bg-slate-900 px-4 py-2 text-sm text-slate-300"
+                                            className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-300"
                                         >
                                             {course}
+
+                                            {editing && (
+                                                <button
+                                                    type="button"
+                                                    onClick={() =>
+                                                        removeCompletedCourse(course)
+                                                    }
+                                                    className="text-slate-500 transition hover:text-white"
+                                                    aria-label={`Remove ${course}`}
+                                                >
+                                                    ×
+                                                </button>
+                                            )}
                                         </span>
                                     ))
                                 ) : (
-                                    <p className="text-sm text-slate-500">
+                                    <span className="text-sm text-slate-500">
                                         No previous learning added yet.
-                                    </p>
+                                    </span>
                                 )}
                             </div>
                         </section>

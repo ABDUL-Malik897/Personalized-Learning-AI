@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { logoutUser } from "../services/auth";
-import { BookOpen, CheckCircle2, Clock, Target, Sparkles, ArrowRight, Loader2, MessageCircle, X, Send, ChevronDown, User, LogOut, } from "lucide-react";
+import { BookOpen, CheckCircle2, Clock, Target, Sparkles, ArrowRight, Bot, Loader2, MessageCircle, X, Send, ChevronDown, User, LogOut, } from "lucide-react";
 import { getUser, getLearningPath, getUserProgress, chatWithAI, reassessLearningPath } from "../services/api";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -20,7 +20,7 @@ function Dashboard() {
     const [chatMessages, setChatMessages] = useState([
         {
             role: "assistant",
-            text: "Hi! 👋 I'm your AI learning assistant. How can I help you with your learning journey?",
+            text: `Hi! I'm your AI learning assistant. How can I help you with your learning journey?`,
         },
     ]);
 
@@ -227,7 +227,7 @@ function Dashboard() {
                         Your learning dashboard
                     </p>
                     <h1 className="mt-2 text-4xl font-bold tracking-tight">
-                        Welcome back, {user.name} 👋
+                        Welcome back, {user.name}
                     </h1>
                     <p className="mt-3 max-w-3xl text-slate-400">
                         Your personalized learning journey is designed around your goals, experience, skills and available time.
@@ -466,8 +466,8 @@ function Dashboard() {
                                         <Sparkles size={18} />
                                     </div>
                                     <div>
-                                        <p className="font-semibold">
-                                            Learning Assistant
+                                        <p className="font-semibold flex gap-2">
+                                            Learning Assistant <Bot/>
                                         </p>
                                         <p className="text-xs text-slate-500">
                                             AI-powered guidance

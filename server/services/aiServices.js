@@ -121,9 +121,6 @@ const analyzeLearner = async (profile) => {
                                 description: {
                                     type: Type.STRING,
                                 },
-                                type: {
-                                    type: Type.STRING,
-                                },
                                 skills: {
                                     type: Type.ARRAY,
                                     items: {
@@ -186,99 +183,61 @@ const analyzeLearner = async (profile) => {
                                 practiceTask: {
                                     type: Type.STRING,
                                 },
-                                resources: {
-                                    type: Type.ARRAY,
-                                    items: {
-                                        type: Type.OBJECT,
-                                        properties: {
-                                            title: {
-                                                type: Type.STRING,
-                                            },
-                                            description: {
-                                                type: Type.STRING,
-                                            },
-                                            url: {
-                                                type: Type.STRING,
-                                            },
-                                            type: {
-                                                type: Type.STRING,
-                                            },
+                                assessment: {
+                                    type: Type.OBJECT,
+                                    properties: {
+                                        title: {
+                                            type: Type.STRING,
                                         },
-                                        required: [
-                                            "title",
-                                            "description",
-                                            "url",
-                                            "type",
-                                        ],
-                                    },
-                                },
-                            },
-                            assessment: {
-                                type: Type.OBJECT,
-                                properties: {
-                                    title: {
-                                        type: Type.STRING,
-                                    },
-
-                                    questions: {
-                                        type: Type.ARRAY,
-
-                                        items: {
-                                            type: Type.OBJECT,
-
-                                            properties: {
-                                                question: {
-                                                    type: Type.STRING,
-                                                },
-
-                                                options: {
-                                                    type: Type.ARRAY,
-
-                                                    items: {
+                                        questions: {
+                                            type: Type.ARRAY,
+                                            items: {
+                                                type: Type.OBJECT,
+                                                properties: {
+                                                    question: {
+                                                        type: Type.STRING,
+                                                    },
+                                                    options: {
+                                                        type: Type.ARRAY,
+                                                        items: {
+                                                            type: Type.STRING,
+                                                        },
+                                                    },
+                                                    correctAnswer: {
+                                                        type: Type.NUMBER,
+                                                    },
+                                                    explanation: {
                                                         type: Type.STRING,
                                                     },
                                                 },
-
-                                                correctAnswer: {
-                                                    type: Type.INTEGER,
-                                                },
-
-                                                explanation: {
-                                                    type: Type.STRING,
-                                                },
+                                                required: [
+                                                    "question",
+                                                    "options",
+                                                    "correctAnswer",
+                                                    "explanation",
+                                                ],
                                             },
-
-                                            required: [
-                                                "question",
-                                                "options",
-                                                "correctAnswer",
-                                                "explanation",
-                                            ],
                                         },
                                     },
+                                    required: [
+                                        "title",
+                                        "questions",
+                                    ],
                                 },
-
-                                required: [
-                                    "title",
-                                    "questions",
-                                ],
                             },
                             required: [
                                 "title",
                                 "description",
-                                "type",
                                 "skills",
                                 "prerequisites",
                                 "estimatedHours",
                                 "reason",
                                 "learningMaterial",
                                 "practiceTask",
-                                "resources",
                                 "assessment",
                             ],
                         },
                     },
-                    
                 },
                 required: [
                     "summary",
@@ -315,8 +274,9 @@ const chatWithAI = async ({ user, learningPath, progress, message }) => {
         Name: ${user.name}
         Goal: ${user.goal}
         Experience Level: ${user.experienceLevel}
-        Skills: ${user.skills.join(", ") || "None"}
-        Interests: ${user.interests.join(", ") || "None"}
+        Skills: ${user.skills?.join(", ") || "None"}
+        Completed Courses: ${user.completedCourses?.join(", ") || "None"}
+        Interests: ${user.interests?.join(", ") || "None"}
         Learning Preference: ${user.learningPreference}
         Available Weekly Hours: ${user.weeklyHours}
 
@@ -393,6 +353,7 @@ const reassessLearningPath = async ({
         Goal: ${user.goal}
         Experience Level: ${user.experienceLevel}
         Skills: ${user.skills?.join(", ") || "None"}
+        Completed Courses: ${user.completedCourses?.join(", ") || "None"}
         Interests: ${user.interests?.join(", ") || "None"}
         Learning Preference: ${user.learningPreference}
         Weekly Hours: ${user.weeklyHours}
